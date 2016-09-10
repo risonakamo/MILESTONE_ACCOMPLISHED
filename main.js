@@ -24,25 +24,58 @@ function customise()
 {
     var url=document.URL;
 
-    var customisations=url.split("#")[1];
+    var customisations=url.split("#");
 
-    customisations=customisations.replace(/'/g,'"');
+    customisations=parseUrl(customisations);
 
-    console.log(customisations);
-
-    try
-    {
-        customisations=JSON.parse(customisations);
-    }
-
-    catch (SyntaxError)
+    if (!customisations)
     {
         return false;
     }
 
-
     return applyCustomisations(customisations);
+}
 
+function parseUrl(urlArray)
+{
+    if (urlArray.length<3)
+    {
+        return false;
+    }
+
+    var c={};
+
+    for (x=0;x<urlArray.length;x++)
+    {
+        console.log(urlArray[x+1]);
+
+        if (urlArray[x]=="background")
+        {
+            c.background=urlArray[x+1];
+        }
+
+        else if (urlArray[x]=="toptext")
+        {
+            c.toptext=urlArray[x+1].replace(/_/g," ");
+        }
+        
+        else if (urlArray[x]=="bottext")
+        {
+            c.bottext=urlArray[x+1].replace(/_/g," ");
+        }
+
+        else if (urlArray[x]=="darken")
+        {
+            c.darken=urlArray[x+1];
+        }
+
+        else if (urlArray[x]=="preset")
+        {
+            c.preset="presets/"+urlArray[x+1];
+        }
+    }
+
+    return c;
 }
 
 function applyCustomisations(customisations)
